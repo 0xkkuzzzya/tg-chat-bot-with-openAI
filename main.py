@@ -5,9 +5,8 @@ import os
 
 TOKEN = os.getenv("TOKEN")
 
-async def send_message_to_api(message: str):
-    url = "http://94.228.162.189:5678/webhook/message"
-    payload = {"message": message}
+async def send_message_to_api(payload: dict):
+    url = "http://94.228.162.189:5678/webhook-test/Task"
     headers = {"Content-Type": "application/json"}
 
     response = requests.post(url, json=payload, headers=headers)
@@ -23,9 +22,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
+    chat_id = update.message.chat.id
 
-   
-    await send_message_to_api(user_message)
+    payload = {
+        "message": user_message,
+        "chat_id": chat_id
+    }
+    await send_message_to_api(payload)
+    print(f"Отправляем payload: {payload}")
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"Ошибка: {context.error}")
